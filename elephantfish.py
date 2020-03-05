@@ -194,7 +194,7 @@ class Position(namedtuple('Position', 'board score')):
     board -- a 256 char representation of the board
     score -- the board evaluation
     """
-    # TODO 补充马,炮，象，将军照面的特殊规则
+    # TODO 补充C，K照面的特殊规则
     def gen_moves(self):
         # For each of our pieces, iterate through each possible 'ray' of moves,
         # as defined in the 'directions' map. The rays are broken e.g. by
@@ -208,8 +208,17 @@ class Position(namedtuple('Position', 'board score')):
                     if q.isspace() or q.isupper(): break
                     # 过河的卒/兵才能横着走
                     if p == 'P' and d in (E, W) and i > 128: break
-                    elif p in ('Q','K') and (j < 160 or j % 16 > 8 or j % 16 < 6): break
-                    elif p == "B" and j > 128: break
+                    # j & 15 等价于 j % 16但是更快
+                    elif p in ('Q','K') and (j < 160 or j & 15 > 8 or j & 15 < 6): break
+                    elif p == 'B' and j < 128: break
+                    elif p == 'N':
+                        n_diff_x = abs((j - i) & 15)
+                        if n_diff_x == 14 or n_diff_x == 2:
+                            if self.board[i + (1 if n_diff_x == 2 else -1)] != '.': break
+                        else:
+                            if j > i and self.board[i + 16] != '.': break
+                            elif self.board[i - 16] != '.': break
+                    elif p == 'B' and self.board[i + d / 2] != '.':break
                     # Move it
                     yield (i, j)
                     # Stop crawlers from sliding, and sliding after captures
@@ -218,9 +227,7 @@ class Position(namedtuple('Position', 'board score')):
     def rotate(self):
         ''' Rotates the board, preserving enpassant '''
         return Position(
-            self.board[::-1].swapcase(), -self.score, self.bc, self.wc,
-            119-self.ep if self.ep else 0,
-            119-self.kp if self.kp else 0)
+            self.board[::-1].swapcase(), -self.score)
 
     def nullmove(self):
         ''' Like rotate, but clears ep and kp '''
