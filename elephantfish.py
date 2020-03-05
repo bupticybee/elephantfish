@@ -141,7 +141,7 @@ pst = {
 
 pst["K"] = [i + piece["K"] if i > 0 else 0 for i in pst["K"]]
 
-A1, I1, A9, I9 = 12 * 16 + 3, 3 * 16 + 3, 12 * 16 + 11, 3 * 16 + 11
+A0, I0, A9, I9 = 12 * 16 + 3,12 * 16 + 11, 3 * 16 + 3,  3 * 16 + 11
 
 initial = (
     '               \n'  #   0 -  9
@@ -194,12 +194,18 @@ class Position(namedtuple('Position', 'board score')):
     board -- a 256 char representation of the board
     score -- the board evaluation
     """
-    # TODO 补充C，K照面的特殊规则
+    # TODO 补充C的特殊规则
     def gen_moves(self):
         # For each of our pieces, iterate through each possible 'ray' of moves,
         # as defined in the 'directions' map. The rays are broken e.g. by
         # captures or immediately in case of pieces such as knights.
         for i, p in enumerate(self.board):
+            if p == 'K':
+                for scanpos in range(i - 16,A9,-16):
+                    if self.board[scanpos] == 'k':
+                        yield (i,scanpos)
+                    elif self.board[scanpos] != '.':
+                        break
             if not p.isupper(): continue
             for d in directions[p]:
                 for j in count(i+d, d):
