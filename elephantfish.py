@@ -160,7 +160,6 @@ class Position(namedtuple('Position', 'board score')):
     board -- a 256 char representation of the board
     score -- the board evaluation
     """
-    # TODO 补充C的特殊规则
     def gen_moves(self):
         # For each of our pieces, iterate through each possible 'ray' of moves,
         # as defined in the 'directions' map. The rays are broken e.g. by
