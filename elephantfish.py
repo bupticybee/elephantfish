@@ -6,7 +6,7 @@ import re, sys, time
 from itertools import count
 from collections import namedtuple
 
-piece = { 'P': 44, 'N': 108, 'B': 23, 'R': 233, 'Q': 23, 'C': 101, 'K': 6000}
+piece = { 'P': 44, 'N': 108, 'B': 23, 'R': 233, 'Q': 23, 'C': 101, 'K': 2500}
 
 # 子力价值表参考“象眼”
 
