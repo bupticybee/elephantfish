@@ -174,8 +174,8 @@ directions = {
     'K': (N, E, S, W)
 }
 
-MATE_LOWER = piece['K'] - 10*piece['R']
-MATE_UPPER = piece['K'] + 10*piece['R']
+MATE_LOWER = piece['K'] - (2*piece['R'] + 2*piece['N'] + 2*piece['B'] + 2*piece['Q'] + 2*piece['C'] + 5*piece['P'])
+MATE_UPPER = piece['K'] + (2*piece['R'] + 2*piece['N'] + 2*piece['B'] + 2*piece['Q'] + 2*piece['C'] + 5*piece['P'])
 
 # The table size is the maximum number of elements in the transposition table.
 TABLE_SIZE = 1e7
