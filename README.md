@@ -1,8 +1,12 @@
-![Elephantfish logo](logo/elephantfish.jpg)
+![Elephantfish](logo/elephantfish.jpg)
 
 ## 介绍 
 
 elephantfish 是受到 [sunfish](https://github.com/thomasahle/sunfish) 启发而撰写的纯python的中国象棋引擎， 整个象棋引擎核心代码只有124行（见[compressed.py](compressed.py)）。
+
+在几天前看到了[sunfish](https://github.com/thomasahle/sunfish)这个项目(是一个国际象棋引擎，只有111行)，觉得很有意思，于是想做一个类似中国象棋版本，中国象棋和国际象棋略有不同，我仅仅单独完成了棋规部分，子力价值表直接的参考了 [象眼](https://www.xqbase.com/league/elephanteye.htm) ,mtb search部分的代码由于原版sunfish写的非常通用，我也就一行未改。
+
+如果你对於程序中的mtd search看不懂建议先看一些对弈基础理论,比如articles下的几篇文章，如[对弈程序基本技术](articles/对弈程序基本技术.pdf)，其官方网址：https://www.xqbase.com/computer/outline.htm
 
 ## 运行截图
 
