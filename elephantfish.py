@@ -234,7 +234,7 @@ class Position(namedtuple('Position', 'board score')):
                             if self.board[i + (1 if n_diff_x == 2 else -1)] != '.': break
                         else:
                             if j > i and self.board[i + 16] != '.': break
-                            elif self.board[i - 16] != '.': break
+                            elif j < i and self.board[i - 16] != '.': break
                     elif p == 'B' and self.board[i + d / 2] != '.':break
                     # Move it
                     yield (i, j)
