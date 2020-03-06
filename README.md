@@ -8,6 +8,8 @@ elephantfish 是受到 [sunfish](https://github.com/thomasahle/sunfish) 启发�
 
 如果你对於程序中的mtd search看不懂建议先看一些对弈基础理论,比如articles下的几篇文章，如[对弈程序基本技术](articles/对弈程序基本技术.pdf)，其官方网址：https://www.xqbase.com/computer/outline.htm
 
+elephantfish默认会进行1秒钟的思考，当然实际一般会比一秒多一些，如果你想要它进行更长时间搜索以获得更好的性能可以对源码相应位置进行更改。
+
 ## 运行截图
 
     Think depth: 6 My move: b9c7
