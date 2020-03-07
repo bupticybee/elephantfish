@@ -150,6 +150,7 @@ TABLE_SIZE = 1e7
 QS_LIMIT = 219
 EVAL_ROUGHNESS = 13
 DRAW_TEST = True
+THINK_TIME = 5
 
 ###############################################################################
 # Chess logic
@@ -443,7 +444,7 @@ def main():
         # Fire up the engine to look for a move.
         start = time.time()
         for _depth, move, score in searcher.search(hist[-1], hist):
-            if time.time() - start > 1:
+            if time.time() - start > THINK_TIME:
                 break
 
         if score == MATE_UPPER:
