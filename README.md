@@ -10,7 +10,7 @@ elephantfish 是受到 [sunfish](https://github.com/thomasahle/sunfish) 启发�
 
 elephantfish默认会进行5秒钟的思考，当然实际一般会比5秒多一些，如果你想要它进行更长时间搜索以获得更好的性能可以对源码相应位置进行更改。
 
-如同sunfish一样，我认为elephantfish会是一个很好的平台，由于其代码非常少，可以很方便的进行各种实验，希望各位感兴趣的同学可以尝试对其进行优化，我也会在之后提供一些棋力对比工具,方便对各种优化进行分析.
+如同sunfish一样，我认为elephantfish会是一个很好的平台，由于其代码非常少，可以很方便的进行各种实验，希望各位感兴趣的同学可以尝试对其进行优化. 如果在优化后想要评估和目前版本的棋力差别，可以使用test.py中的self_arena来将你的代码和elephantfish进行对弈。
 
 ## 运行截图
 
