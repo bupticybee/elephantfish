@@ -455,6 +455,5 @@ def main():
         print("Think depth: {} My move: {}".format(_depth, render(255-move[0] - 1) + render(255-move[1]-1)))
         hist.append(hist[-1].move(move))
 
-
 if __name__ == '__main__':
     main()

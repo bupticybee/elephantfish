@@ -38,11 +38,11 @@ pst = {
       0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
       0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
       0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-      0,  0,  0,  0,  0, 20,  0,  0,  0, 20,  0,  0,  0,  0,  0,  0,
+      0,  0,  0,  0,  0, 40,  0,  0,  0, 40,  0,  0,  0,  0,  0,  0,
       0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-      0,  0,  0, 18,  0,  0, 20, 23, 20,  0,  0, 18,  0,  0,  0,  0,
-      0,  0,  0,  0,  0,  0,  0, 23,  0,  0,  0,  0,  0,  0,  0,  0,
-      0,  0,  0,  0,  0, 20, 20,  0, 20, 20,  0,  0,  0,  0,  0,  0,
+      0,  0,  0, 38,  0,  0, 40, 43, 40,  0,  0, 38,  0,  0,  0,  0,
+      0,  0,  0,  0,  0,  0,  0, 43,  0,  0,  0,  0,  0,  0,  0,  0,
+      0,  0,  0,  0,  0, 40, 40,  0, 40, 40,  0,  0,  0,  0,  0,  0,
       0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
       0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
       0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
@@ -148,9 +148,9 @@ TABLE_SIZE = 1e7
 
 # Constants for tuning search
 QS_LIMIT = 219
-EVAL_ROUGHNESS = 2
+EVAL_ROUGHNESS = 13
 DRAW_TEST = True
-THINK_TIME = 5
+THINK_TIME = 0.5
 
 ###############################################################################
 # Chess logic
@@ -252,7 +252,7 @@ class Searcher:
         self.history = set()
         self.nodes = 0
 
-    def bound(self, pos, gamma, depth, root=True):
+    def alphabet(self, pos, alpha, beta, depth, root=True):
         """ returns r where
                 s(pos) <= r < gamma    if gamma > s(pos)
                 gamma <= r <= s(pos)   if gamma <= s(pos)"""
@@ -285,9 +285,9 @@ class Searcher:
         # We also need to be sure, that the stored search was over the same
         # nodes as the current search.
         entry = self.tp_score.get((pos, depth, root), Entry(-MATE_UPPER, MATE_UPPER))
-        if entry.lower >= gamma and (not root or self.tp_move.get(pos) is not None):
+        if entry.lower >= beta and (not root or self.tp_move.get(pos) is not None):
             return entry.lower
-        if entry.upper < gamma:
+        if entry.upper < alpha:
             return entry.upper
 
         # Here extensions may be added
@@ -295,40 +295,48 @@ class Searcher:
 
         # Generator of moves to search in order.
         # This allows us to define the moves, but only calculate them if needed.
-        def moves():
             # First try not moving at all. We only do this if there is at least one major
             # piece left on the board, since otherwise zugzwangs are too dangerous.
-            if depth > 0 and not root and any(c in pos.board for c in 'RNC'):
-                yield None, -self.bound(pos.nullmove(), 1-gamma, depth-3, root=False)
-            # For QSearch we have a different kind of null-move, namely we can just stop
-            # and not capture anythign else.
-            if depth == 0:
-                yield None, pos.score
-            # Then killer move. We search it twice, but the tp will fix things for us.
-            # Note, we don't have to check for legality, since we've already done it
-            # before. Also note that in QS the killer must be a capture, otherwise we
-            # will be non deterministic.
-            killer = self.tp_move.get(pos)
-            if killer and (depth > 0 or pos.value(killer) >= QS_LIMIT):
-                yield killer, -self.bound(pos.move(killer), 1-gamma, depth-1, root=False)
-            # Then all the other moves
-            for move in sorted(pos.gen_moves(), key=pos.value, reverse=True):
-            #for val, move in sorted(((pos.value(move), move) for move in pos.gen_moves()), reverse=True):
-                # If depth == 0 we only try moves with high intrinsic score (captures and
-                # promotions). Otherwise we do all moves.
-                if depth > 0 or pos.value(move) >= QS_LIMIT:
-                    yield move, -self.bound(pos.move(move), 1-gamma, depth-1, root=False)
-
-        # Run through the moves, shortcutting when possible
+        if depth > 0 and not root and any(c in pos.board for c in 'RNC'):
+            val = -self.alphabet(pos.nullmove(), -beta,1-beta, depth-3, root=False)
+            if val >= beta and self.alphabet(pos,alpha,beta,depth - 3,root=False): return val
+        # For QSearch we have a different kind of null-move, namely we can just stop
+        # and not capture anythign else.
+        if depth == 0:
+            return pos.score
+        # Then killer move. We search it twice, but the tp will fix things for us.
+        # Note, we don't have to check for legality, since we've already done it
+        # before. Also note that in QS the killer must be a capture, otherwise we
+        # will be non deterministic.
         best = -MATE_UPPER
-        for move, score in moves():
-            best = max(best, score)
-            if best >= gamma:
-                # Clear before setting, so we always have a value
-                if len(self.tp_move) > TABLE_SIZE: self.tp_move.clear()
-                # Save the move for pv construction and killer heuristic
-                self.tp_move[pos] = move
-                break
+        killer = self.tp_move.get(pos)
+
+        # Then all the other moves
+        mvBest = None
+        for move in [killer] + sorted(pos.gen_moves(), key=pos.value, reverse=True):
+        #for val, move in sorted(((pos.value(move), move) for move in pos.gen_moves()), reverse=True):
+            # If depth == 0 we only try moves with high intrinsic score (captures and
+            # promotions). Otherwise we do all moves.
+            if (move is not None) and (depth > 0):
+                if best == -MATE_UPPER:
+                    val = -self.alphabet(pos.move(move), -beta, -alpha, depth - 1, root=False)
+                else:
+                    val = -self.alphabet(pos.move(move), -alpha - 1, -alpha, depth - 1, root=False)
+                    if val > alpha and val < beta:
+                        val = -self.alphabet(pos.move(move), -beta, -alpha, depth - 1, root=False)
+                if val > best:
+                    best = val
+                    if val > beta:
+                        mvBest = move
+                        break;
+                    if val > alpha:
+                        alpha = val
+                        mvBest = move
+        if mvBest is not None:
+            # Clear before setting, so we always have a value
+            # Save the move for pv construction and killer heuristic
+            if len(self.tp_move) > TABLE_SIZE: self.tp_move.clear()
+            self.tp_move[pos] = mvBest
 
         # Stalemate checking is a bit tricky: Say we failed low, because
         # we can't (legally) move and so the (real) score is -infty.
@@ -340,7 +348,7 @@ class Searcher:
         # This doesn't prevent sunfish from making a move that results in stalemate,
         # but only if depth == 1, so that's probably fair enough.
         # (Btw, at depth 1 we can also mate without realizing.)
-        if best < gamma and best < 0 and depth > 0:
+        if best < alpha and best < 0 and depth > 0:
             is_dead = lambda pos: any(pos.value(m) >= MATE_LOWER for m in pos.gen_moves())
             if all(is_dead(pos.move(m)) for m in pos.gen_moves()):
                 in_check = is_dead(pos.nullmove())
@@ -349,9 +357,9 @@ class Searcher:
         # Clear before setting, so we always have a value
         if len(self.tp_score) > TABLE_SIZE: self.tp_score.clear()
         # Table part 2
-        if best >= gamma:
+        if best >= beta:
             self.tp_score[pos, depth, root] = Entry(best, entry.upper)
-        if best < gamma:
+        if best < alpha:
             self.tp_score[pos, depth, root] = Entry(entry.lower, best)
 
         return best
@@ -372,18 +380,7 @@ class Searcher:
             # 'while lower != upper' would work, but play tests show a margin of 20 plays
             # better.
             lower, upper = -MATE_UPPER, MATE_UPPER
-            while lower < upper - EVAL_ROUGHNESS:
-                gamma = (lower+upper+1)//2
-                score = self.bound(pos, gamma, depth)
-                if score >= gamma:
-                    lower = score
-                if score < gamma:
-                    upper = score
-            # We want to make sure the move to play hasn't been kicked out of the table,
-            # So we make another call that must always fail high and thus produce a move.
-            self.bound(pos, lower, depth)
-            # If the game hasn't finished we can retrieve our move from the
-            # transposition table.
+            self.alphabet(pos, lower,upper, depth)
             yield depth, self.tp_move.get(pos), self.tp_score.get((pos, depth, True),Entry(-MATE_UPPER, MATE_UPPER)).lower
 
 ###############################################################################
@@ -454,6 +451,7 @@ def main():
         # 'back rotate' the move before printing it.
         print("Think depth: {} My move: {}".format(_depth, render(255-move[0] - 1) + render(255-move[1]-1)))
         hist.append(hist[-1].move(move))
+
 
 if __name__ == '__main__':
     main()

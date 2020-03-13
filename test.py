@@ -127,10 +127,11 @@ def play(version1_version2_secs_plus_fen):
             pass
 
         if m is None:
-            print('Game not done, but no move? Score', score)
             name = version1 if d%2 == 0 else version2
+            print('Game not done, but no move? Score', score)
             print(version1, tools.renderFEN(pos))
-            assert False
+            return version2 if d%2 == 0 else version1
+            #assert False
 
         # Test move
         is_dead = lambda pos: any(pos.value(m) >= elephantfish.MATE_LOWER for m in pos.gen_moves())
@@ -228,7 +229,7 @@ def main():
 
     benchmark(5,6)
 
-    self_arena("elephantfish", "algorithms.elephantfish_improve",10 , 20, .2)
+    self_arena("elephantfish", "algorithms.elephantfish_improve",100 , 20, .1)
 
 # Old Python compatability
 if sys.version_info < (3,5):
