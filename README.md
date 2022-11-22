@@ -12,6 +12,8 @@ elephantfish默认会进行5秒钟的思考，当然实际一般会比5秒多一
 
 如同sunfish一样，我认为elephantfish会是一个很好的平台，由于其代码非常少，可以很方便的进行各种实验，希望各位感兴趣的同学可以尝试对其进行优化. 如果在优化后想要评估和目前版本的棋力差别，可以使用test.py中的self_arena来将你的代码和elephantfish进行对弈。
 
+如果你觉得这个版本的象棋ai实力不够强，可以看看 [XQpy](https://github.com/bupticybee/XQPy)
+
 ## 运行截图
 
     Think depth: 6 My move: b9c7
