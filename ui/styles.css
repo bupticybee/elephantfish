@@ -1,0 +1,130 @@
+body {
+    font-family: 'Microsoft YaHei', sans-serif;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.game-container {
+    margin: 20px 0;
+}
+
+.control-panel {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+}
+
+input[type="text"] {
+    padding: 8px;
+    margin-right: 10px;
+    width: 200px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+button {
+    padding: 8px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#status {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.error {
+    color: red;
+}
+
+/* 棋盘和棋子样式 */
+.chessboard {
+    position: relative;
+    width: 800px;  /* 9格 * 80px + 2 * 40px边距 */
+    height: 880px; /* 10格 * 80px + 2 * 40px边距 */
+    margin: 0 auto;
+    background-color: #f0c78a;
+    border: 2px solid #8b4513;
+    padding: 40px;
+}
+
+.piece {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    transform: translate(-50%, -50%);
+    z-index: 100; /* 确保棋子在最上层 */
+}
+
+/* 红方棋子样式 */
+[class*="red-"] {
+    background-color: #ff4d4d;
+    color: #800000;
+    border: 2px solid #800000;
+}
+
+/* 黑方棋子样式 */
+[class*="black-"] {
+    background-color: #333;
+    color: #fff;
+    border: 2px solid #000;
+}
+
+/* 棋子悬停效果 */
+.piece:hover {
+    transform: translate(-50%, -50%) scale(1.05);
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+/* 楚河汉界样式 */
+.river {
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+    color: #8b4513;
+}
+
+.han-border {
+    top: 55%;
+}
+
+/* 棋盘网格线 */
+.board-grid {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    width: calc(100% - 80px);
+    height: calc(100% - 80px);
+    background-image: linear-gradient(#8b4513 1px, transparent 1px),
+                      linear-gradient(90deg, #8b4513 1px, transparent 1px);
+    background-size: 80px 80px;
+    opacity: 0.5;
+    z-index: 1; /* 确保网格在底层 */
+}
+
+/* 选中棋子的样式 */
+.piece.selected {
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+    border: 2px solid #ffd700;
+} 
