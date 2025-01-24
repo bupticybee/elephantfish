@@ -3,32 +3,6 @@ let selectedPiece = null; // 当前选中的棋子
 const GRID_SIZE = 80;  // 格子大小
 const BOARD_PADDING = 40;  // 棋盘边距
 
-function connectWebSocket() {
-    ws = new WebSocket("ws://shit:8000/");
-    
-    ws.onopen = function() {
-        updateStatus("已连接到服务器", "green");
-    };
-
-    ws.onmessage = function(event) {
-        const message = event.data;
-        console.log("从服务器接收到的消息:", message);
-        updateStatus(`AI的移动: ${message}`, "blue");
-    };
-
-    ws.onclose = function() {
-        updateStatus("与服务器断开连接", "red");
-        // 尝试重新连接
-
-		// taylor debug
-        // setTimeout(connectWebSocket, 3000);
-    };
-
-    ws.onerror = function(error) {
-        updateStatus("连接错误，请检查服务器是否运行", "red");
-    };
-}
-
 function initializeBoard() {
     const chessboard = document.querySelector('.chessboard');
     const pieces = document.querySelectorAll('.piece');
@@ -215,6 +189,5 @@ function updateStatus(message, color) {
 
 // 页面加载完成后初始化
 window.addEventListener('load', () => {
-    // connectWebSocket();
     initializeBoard();
 }); 

@@ -47,17 +47,15 @@
 
             <!-- 棋盘网格线 -->
             <div class="board-grid"></div>
-            
+
             <!-- 楚河汉界 -->
-            <div class="river">楚河</div>
-            <div class="river han-border">汉界</div>
+            <div class="river">
+                <span>楚</span>
+                <span>河</span>
+                <span>汉</span>
+                <span>界</span>
+            </div>
         </div>
-    </div>
-    <div class="control-panel">
-        <div id="status">等待连接服务器...</div>
-        <input type="text" id="move" placeholder="输入棋步 (例如: h2e2)" 
-               onkeypress="if(event.keyCode==13) sendMove()">
-        <button onclick="sendMove()">发送棋步</button>
     </div>
     <script src="script.js"></script>
 </body>

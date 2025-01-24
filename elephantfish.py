@@ -5,10 +5,9 @@ from __future__ import print_function
 import re, sys, time
 from itertools import count
 from collections import namedtuple
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from http.server import HTTPServer, SimpleHTTPRequestHandler
 import json
 from urllib.parse import parse_qs
-from cors import CORSRequestHandler  # 我们稍后会创建这个文件
 
 piece = { 'P': 44, 'N': 108, 'B': 23, 'R': 233, 'A': 23, 'C': 101, 'K': 2500}
 
@@ -459,11 +458,18 @@ def main():
         print("Think depth: {} My move: {}".format(_depth, render(255-move[0] - 1) + render(255-move[1]-1)))
         hist.append(hist[-1].move(move))
 
-class ChessRequestHandler(CORSRequestHandler):
+class ChessRequestHandler(SimpleHTTPRequestHandler):
+    def end_headers(self):
+        self.send_header('Access-Control-Allow-Credentials', 'true')
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header("Access-Control-Allow-Headers", "X-Requested-With, Content-type")
+        SimpleHTTPRequestHandler.end_headers(self)
+
     def do_OPTIONS(self):
         print(f"get option req, path={self.path}")
         self.send_response(200, "ok")
-        self.send_header('Access-Control-Allow-Credentials', 'true')
+        # self.send_header('Access-Control-Allow-Credentials', 'true')
         # self.send_header('Access-Control-Allow-Origin', '*')
         # self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
         # self.send_header("Access-Control-Allow-Headers", "X-Requested-With, Content-type")
