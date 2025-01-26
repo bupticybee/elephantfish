@@ -32,11 +32,19 @@ elephantfish默认会进行5秒钟的思考，当然实际一般会比5秒多一
         
     Your move:
 
+
+Web UI:
+
+
+![UI](ui/snapshot.png)
+
 # 运行elephantfish!
 
 elephahtfish 自包含在 `elephantfish.py` 文件中，只是用了python的自带操作而没有使用任何第三方库. 建议使用 `pypy` 或者 `pypy3` 来获得更好的性能表现.
 
 简单的使用命令```python elephantfish.py``` 或者```pypy elephantfish.py``` 就可以运行象棋程序,程序会利用自带一个命令行工具进行对局.
+
+如果以 Web UI 方式下棋，用命令行启动服务 `python ui-server.py`，程序监听HTTP 8000端口，浏览器打开 `ui/chess.html` 即可，行棋时前端以 HTTP Post 方式与服务交互。
 
 # 特性
 
