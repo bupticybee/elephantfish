@@ -377,13 +377,16 @@ class Searcher:
             lower, upper = -MATE_UPPER, MATE_UPPER
             while lower < upper - EVAL_ROUGHNESS:
                 gamma = (lower+upper+1)//2
+                print(f"in while: lower={lower}, upper={upper}, gamme={gamma}, depth={depth}")
                 score = self.bound(pos, gamma, depth)
+                print(f"in while: score={score}")
                 if score >= gamma:
                     lower = score
                 if score < gamma:
                     upper = score
             # We want to make sure the move to play hasn't been kicked out of the table,
             # So we make another call that must always fail high and thus produce a move.
+            print(f"out of while: lower={lower}, depth={depth}")
             self.bound(pos, lower, depth)
             # If the game hasn't finished we can retrieve our move from the
             # transposition table.
@@ -493,7 +496,7 @@ class ChessRequestHandler(SimpleHTTPRequestHandler):
                 # 这里调用象棋引擎的代码处理移动并获取 AI 的响应
                 print(f"key log: To Process move: {move}")
                 ai_move = process_move(move)  # 这个函数需要实现
-                print(f"key log: AI move: {ai_move}")
+                # print(f"key log: AI move: {ai_move}")
                 
                 # 发送响应
                 self.send_response(200)
@@ -556,6 +559,7 @@ def process_move(input_move):
     ai_move = render(255-move[0] - 1) + render(255-move[1]-1)
     print("Think depth: {} My move: {}".format(_depth, ai_move))
     hist.append(hist[-1].move(move))
+    print_pos(hist[-1])
     return ai_move
 
 if __name__ == '__main__':
