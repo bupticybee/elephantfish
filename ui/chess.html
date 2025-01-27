@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>中国象棋</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>中国象棋在线对战</h1>
+    <div class="game-container">
+        <div class="chessboard">
+            <!-- 红方棋子 -->
+            <div class="piece red-che" data-position="a0">车</div>
+            <div class="piece red-ma" data-position="b0">马</div>
+            <div class="piece red-xiang" data-position="c0">相</div>
+            <div class="piece red-shi" data-position="d0">士</div>
+            <div class="piece red-jiang" data-position="e0">帅</div>
+            <div class="piece red-shi" data-position="f0">士</div>
+            <div class="piece red-xiang" data-position="g0">相</div>
+            <div class="piece red-ma" data-position="h0">马</div>
+            <div class="piece red-che" data-position="i0">车</div>
+            <div class="piece red-pao" data-position="b2">炮</div>
+            <div class="piece red-pao" data-position="h2">炮</div>
+            <div class="piece red-bing" data-position="a3">兵</div>
+            <div class="piece red-bing" data-position="c3">兵</div>
+            <div class="piece red-bing" data-position="e3">兵</div>
+            <div class="piece red-bing" data-position="g3">兵</div>
+            <div class="piece red-bing" data-position="i3">兵</div>
+
+            <!-- 黑方棋子 -->
+            <div class="piece black-che" data-position="a9">車</div>
+            <div class="piece black-ma" data-position="b9">馬</div>
+            <div class="piece black-xiang" data-position="c9">象</div>
+            <div class="piece black-shi" data-position="d9">士</div>
+            <div class="piece black-jiang" data-position="e9">将</div>
+            <div class="piece black-shi" data-position="f9">士</div>
+            <div class="piece black-xiang" data-position="g9">象</div>
+            <div class="piece black-ma" data-position="h9">馬</div>
+            <div class="piece black-che" data-position="i9">車</div>
+            <div class="piece black-pao" data-position="b7">炮</div>
+            <div class="piece black-pao" data-position="h7">炮</div>
+            <div class="piece black-bing" data-position="a6">卒</div>
+            <div class="piece black-bing" data-position="c6">卒</div>
+            <div class="piece black-bing" data-position="e6">卒</div>
+            <div class="piece black-bing" data-position="g6">卒</div>
+            <div class="piece black-bing" data-position="i6">卒</div>
+
+            <!-- 棋盘网格线 -->
+            <div class="board-grid"></div>
+
+            <!-- 楚河汉界 -->
+            <div class="river">
+                <span>楚</span>
+                <span>河</span>
+                <span>汉</span>
+                <span>界</span>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
